@@ -2,8 +2,29 @@ from django.db import models
 
 # All API models go here.
 
-# Vendor Model / Employee Model
+# Vendor Model 
 class Vendor (models.Model):
+    name = models.CharField(max_length=100)
+    city = models.CharField(max_length=100, null=True, blank=True)
+    state = models.CharField(max_length=100, null=True, blank=True)
+    zipcode = models.CharField(max_length=20, null=True, blank=True)
+    address = models.CharField(max_length=255, null=True, blank=True)
+    number = models.CharField(max_length=15, null=True, blank=True)
+    vendor_id = models.CharField(max_length=50, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    notes = models.TextField(blank=True, null=True)
+    active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True) 
+    class Meta:
+        managed = True
+        db_table = 'vehicles_vendor'
+
+    def __str__(self):
+        return self.name
+
+#Employee Model
+class Employee (models.Model):
     name = models.CharField(max_length=100)
     city = models.CharField(max_length=100, null=True, blank=True)
     state = models.CharField(max_length=100, null=True, blank=True)
@@ -18,14 +39,16 @@ class Vendor (models.Model):
     updated_at = models.DateTimeField(auto_now=True) 
     class Meta:
         managed = True
-        db_table = 'vehicles_vendor'
+        db_table = 'employees'
 
     def __str__(self):
         return self.name
     
 
 
+
 # Vehicle Model
+
 class Vehicle(models.Model):
     bus_no = models.CharField(max_length=50, unique=True, primary_key=True)   # Bus identifier
     veh_make = models.CharField(max_length=100, blank=True, null=True)
@@ -33,14 +56,14 @@ class Vehicle(models.Model):
     fuel_type = models.CharField(max_length=50, blank=True, null=True)
     vin_number = models.CharField(max_length=100, unique=True)
     tag_no = models.CharField(max_length=50, blank=True, null=True)
-    body_year = models.PositiveIntegerField(blank=True, null=True)
+    body_year = models.CharField(blank=True, null=True)
     next_ps_date = models.DateField(blank=True, null=True)
     inservice_date = models.DateField(blank=True, null=True)
     vehicle_class = models.CharField(max_length=50, blank=True, null=True)
     veh_model = models.CharField(max_length=100, blank=True, null=True)
-    chassis_year = models.PositiveIntegerField(blank=True, null=True)
-    orig_cost = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
-    cap = models.PositiveIntegerField(blank=True, null=True)  # capacity
+    chassis_year = models.CharField(blank=True, null=True)
+    orig_cost = models.CharField( blank=True, null=True)
+    cap = models.CharField(blank=True, null=True)  # capacity
     body_make = models.CharField(max_length=100, blank=True, null=True)
     body_no = models.CharField(max_length=50, blank=True, null=True)
     trans_serial_no = models.CharField(max_length=100, blank=True, null=True)
@@ -54,32 +77,32 @@ class Vehicle(models.Model):
     last_ps_date = models.DateField(blank=True, null=True)
     next_oil_change = models.DateField(blank=True, null=True)
     fuel_gal = models.FloatField(blank=True, null=True)
-    last_fuel_mileage = models.PositiveIntegerField(blank=True, null=True)
+    last_fuel_mileage = models.CharField(blank=True, null=True)
     ytd_fuel = models.FloatField(blank=True, null=True)
-    current_mileage = models.PositiveIntegerField(blank=True, null=True)
-    sch_begin_mileage = models.PositiveIntegerField(blank=True, null=True)
-    labor_cost = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
-    parts_cost = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
-    other_cost = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
-    total_opr_cost = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
+    current_mileage = models.CharField(blank=True, null=True)
+    sch_begin_mileage = models.CharField(blank=True, null=True)
+    labor_cost = models.CharField(blank=True, null=True)
+    parts_cost = models.CharField(blank=True, null=True)
+    other_cost = models.CharField(blank=True, null=True)
+    total_opr_cost = models.CharField(blank=True, null=True)
     chassis_no = models.CharField(max_length=100, blank=True, null=True)
     last_time_in = models.DateTimeField(blank=True, null=True)
     last_time_out = models.DateTimeField(blank=True, null=True)
     last_oil_change = models.DateField(blank=True, null=True)
     status = models.CharField(max_length=50, blank=True, null=True)
-    gross_weight = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    gvw_front = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    gross_weight = models.CharField(blank=True, null=True)
+    gvw_front = models.CharField(blank=True, null=True)
     tire_size = models.CharField(max_length=50, blank=True, null=True)
-    gvw_rear = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    wheel_base = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    gvw_rear = models.CharField(blank=True, null=True)
+    wheel_base = models.CharField(blank=True, null=True)
     wheel_chair = models.BooleanField(default=False)
     assigned_shop = models.CharField(max_length=100, blank=True, null=True)
     insp_group = models.CharField(max_length=100, blank=True, null=True)
     bus_driver = models.CharField(max_length=100, blank=True, null=True)
     status_date = models.DateField(blank=True, null=True)
     trade_code = models.CharField(max_length=50, blank=True, null=True)
-    last_pm_mileage = models.PositiveIntegerField(blank=True, null=True)
-    next_pm_mileage = models.PositiveIntegerField(blank=True, null=True)
+    last_pm_mileage = models.CharField(blank=True, null=True)
+    next_pm_mileage = models.CharField(blank=True, null=True)
     last_pm_date = models.DateField(blank=True, null=True)
     next_pm_date = models.DateField(blank=True, null=True)
 
@@ -89,6 +112,7 @@ class Vehicle(models.Model):
 
     def __str__(self):
         return f"{self.bus_no} ({self.veh_make} {self.veh_model})"
+
 
 # Location Model
 class Location(models.Model):
