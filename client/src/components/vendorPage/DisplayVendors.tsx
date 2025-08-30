@@ -55,14 +55,17 @@ function DisplayVendors() {
             return (
               <tr
                 className="border-t border-gray-300 text-center"
-                key={vendor.id}
+                key={vendor?.id}
               >
-                <td className="text-center">{vendor.name}</td>
+                <td>
+                  <p>{vendor.email || "none"}</p>
+                  <p>{vendor.name || "none"}</p>
+                </td>
                 <td>{vendor.number || "none"}</td>
                 <td>{vendor.email || "none"}</td>
                 <td>{vendor.address || "none"}</td>
-                <td className="text-center">{vendor.city || "none"}</td>
-                <td className="text-center">{vendor.state || "none"}</td>
+                <td>{vendor.city || "none"}</td>
+                <td>{vendor.state || "none"}</td>
                 <td>{vendor.notes || "none"}</td>
               </tr>
             );

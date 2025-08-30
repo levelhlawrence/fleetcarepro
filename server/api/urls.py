@@ -5,13 +5,13 @@ from .views import VendorViewSet, VehicleViewSet, LocationViewSet, EmployeeViewS
 router = routers.DefaultRouter()
 
 # Register viewsets
-router.register(r'vendors', VendorViewSet)
-router.register(r'vehicles', VehicleViewSet)
-router.register(r'locations', LocationViewSet)
-router.register(r'employees', EmployeeViewSet)
+router.register(r'vendors', VendorViewSet, basename='vendor')
+router.register(r'vehicles', VehicleViewSet, basename='vehicle')
+router.register(r'locations', LocationViewSet, basename='location')
+router.register(r'employees', EmployeeViewSet, basename='employee')
 
 
 
 urlpatterns = [
-    path('', include(router.urls)), 
+    path('', include(router.urls)),
 ]
