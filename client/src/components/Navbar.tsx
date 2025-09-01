@@ -42,7 +42,7 @@ export default function Navbar() {
           <li key={route.name} className="flex gap-4 mb-8 items-center">
             <div>{route.icon}</div>
             <Link className="text-sm" to={route.href}>
-              {route.name}
+              {route.name.charAt(0).toUpperCase() + route.name.slice(1)}
             </Link>
           </li>
         ))}

@@ -14,7 +14,6 @@ class VehicleViewSet(viewsets.ModelViewSet):
     serializer_class = VehicleSerializer
 
 
-
 # LOCATION VIEWS
 class LocationViewSet(viewsets.ModelViewSet):
     queryset = Location.objects.all()
