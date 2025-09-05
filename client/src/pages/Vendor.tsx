@@ -1,6 +1,6 @@
 import { useState } from "react";
 import AddVendor from "../components/vendorPage/AddVendor";
-import DisplayVendors from "../components/displayVendors";
+import DisplayVendors from "../components/vendorPage/DisplayVendors";
 
 function Vendor() {
   const [showAddVendor, setShowAddVendor] = useState(false);
