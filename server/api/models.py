@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 # All API models go here.
 
@@ -24,27 +25,48 @@ class Vendor (models.Model):
         return self.name
 
 #Employee Model
-class Employee (models.Model):
-    name = models.CharField(max_length=100)
+class EmployeeManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError("Users must have an email address")
+        email = self.normalize_email(email)
+        extra_fields.setdefault("username", email.split("@")[0])  # fallback username
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        return self.create_user(email, password, **extra_fields)
+
+
+class Employee(AbstractUser):
+    email = models.EmailField(unique=True)
     city = models.CharField(max_length=100, null=True, blank=True)
     state = models.CharField(max_length=100, null=True, blank=True)
     zipcode = models.CharField(max_length=20, null=True, blank=True)
     address = models.CharField(max_length=255, null=True, blank=True)
     number = models.CharField(max_length=15, null=True, blank=True)
-    employee_id = models.CharField(max_length=50, blank=True, null=True)
-    email = models.EmailField(blank=True, null=True)
+    department = models.CharField(max_length=100)
+    employee_id = models.CharField(max_length=50, blank=True, null=True, unique=True)
     notes = models.TextField(blank=True, null=True)
-    active = models.BooleanField(default=True)
+    date_of_birth = models.DateField(null=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True) 
+    updated_at = models.DateTimeField(auto_now=True)
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["employee_id", "first_name", "last_name"]
+
+    objects = EmployeeManager()
+
     class Meta:
-        managed = True
-        db_table = 'employees'
+        db_table = "employees"
 
     def __str__(self):
-        return self.name
-    
-
+        return f"{self.first_name} {self.last_name}"
 
 
 # Vehicle Model
