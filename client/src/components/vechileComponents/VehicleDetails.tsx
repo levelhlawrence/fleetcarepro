@@ -1,4 +1,6 @@
 import { useLocation } from "react-router";
+import { FaCar } from "react-icons/fa";
+import { FaBus } from "react-icons/fa";
 
 export default function VehicleDetails() {
   const location = useLocation();
@@ -13,10 +15,17 @@ export default function VehicleDetails() {
     <section className="px-4 min-h-screen">
       {veh && (
         <div>
-          <h1 className="text-2xl font-semibold mt-8 ">
+          <h1 className="text-2xl font-semibold mt-8 border-b border-gray-300 pb-1 mb-4">
             Vehicle: {veh.bus_no}
           </h1>
-          <p className="text-gray-500 text-sm">Type: {veh.vehicle_class}</p>
+          <div className="flex gap-4 item-center text-gray-500">
+            <p className="text-sm">Type: {veh.vehicle_class}</p>
+            {veh.vehicle_class === "BUS" ? (
+              <FaBus className="mt-[0.1rem]" />
+            ) : (
+              <FaCar className="mt-[0.1rem]" />
+            )}
+          </div>
           <form>
             <div className="grid grid-cols-2 gap-2 mt-8">
               <div>
@@ -26,6 +35,7 @@ export default function VehicleDetails() {
                   name="make"
                   type="text"
                   placeholder={veh.veh_make || "NULL"}
+                  className="px-2"
                 />
               </div>
               <div>
@@ -35,6 +45,7 @@ export default function VehicleDetails() {
                   name="model"
                   type="text"
                   placeholder={veh.veh_model || "NULL"}
+                  className="px-2"
                 />
               </div>
               <div>
@@ -44,6 +55,7 @@ export default function VehicleDetails() {
                   name="year"
                   type="text"
                   placeholder={veh.body_year || "NULL"}
+                  className="px-2"
                 />
               </div>
               <div>
@@ -53,6 +65,7 @@ export default function VehicleDetails() {
                   name="capacity"
                   type="text"
                   placeholder={veh.cap || "NULL"}
+                  className="px-2"
                 />
               </div>
               <div>
@@ -62,6 +75,7 @@ export default function VehicleDetails() {
                   name="mileage"
                   type="text"
                   placeholder={veh.current_mileage || "NULL"}
+                  className="px-2"
                 />
               </div>
               <div>
@@ -71,6 +85,7 @@ export default function VehicleDetails() {
                   name="engine"
                   type="text"
                   placeholder={veh.eng_manuf || "NULL"}
+                  className="px-2"
                 />
               </div>
               <div>
@@ -80,6 +95,7 @@ export default function VehicleDetails() {
                   name="eng-model"
                   type="text"
                   placeholder={veh.eng_model || "NULL"}
+                  className="px-2"
                 />
               </div>
               <div>
@@ -89,6 +105,7 @@ export default function VehicleDetails() {
                   name="fuel-type"
                   type="text"
                   placeholder={veh.fuel_type || "NULL"}
+                  className="px-2"
                 />
               </div>
               <div>
@@ -98,6 +115,7 @@ export default function VehicleDetails() {
                   name="make"
                   type="text"
                   placeholder={`${veh.gross_weight || "NULL"}lbs`}
+                  className="px-2"
                 />
               </div>
               <div>
@@ -107,6 +125,7 @@ export default function VehicleDetails() {
                   name="status"
                   type="text"
                   placeholder={veh.status || "NULL"}
+                  className="px-2"
                 />
               </div>
               <div>
@@ -116,6 +135,7 @@ export default function VehicleDetails() {
                   name="vin"
                   type="text"
                   placeholder={veh.vin_number || "NULL"}
+                  className="px-2"
                 />
               </div>
               <div>
@@ -125,6 +145,7 @@ export default function VehicleDetails() {
                   name="tag"
                   type="text"
                   placeholder={veh.tag_no}
+                  className="px-2"
                 />
               </div>
               <div>
@@ -134,6 +155,7 @@ export default function VehicleDetails() {
                   name="tag"
                   type="text"
                   placeholder={veh.wheel_chair || "NO"}
+                  className="px-2"
                 />
               </div>
               <div>
@@ -143,6 +165,7 @@ export default function VehicleDetails() {
                   name="body_no"
                   type="text"
                   placeholder={veh.body_no || "NULL"}
+                  className="px-2"
                 />
               </div>
             </div>

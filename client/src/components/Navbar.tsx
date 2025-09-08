@@ -1,14 +1,39 @@
 import fleetCareLogo from "../images/maintLogo1.svg";
 import { useState } from "react";
 import { navRoutes } from "../utils/routes";
-import { IoMenuOutline, IoClose } from "react-icons/io5";
-import { Link } from "react-router";
+import {
+  IoMenuOutline,
+  IoClose,
+  IoLogOutOutline,
+  IoPersonOutline,
+} from "react-icons/io5";
+import { Link, useNavigate } from "react-router";
+import { useAuth } from "../contexts/AuthContext";
+import { authAPI } from "../utils/api";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { state, dispatch } = useAuth();
+  const navigate = useNavigate();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const toggleMenuHandler = () => {
     setIsOpen((prev) => !prev);
+  };
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      if (state.refreshToken) {
+        await authAPI.logout(state.refreshToken);
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      dispatch({ type: "LOGOUT" });
+      setIsLoggingOut(false);
+      navigate("/login");
+    }
   };
 
   return (
@@ -34,19 +59,49 @@ export default function Navbar() {
       </button>
 
       {/* Menu */}
-      <ul
-        className={`mt-20 md:mt-24 transition-all duration-300 absolute bg-gray-600 right-0 top-[-2rem] h-screen p-10 w-1/2 md:relative md:p-0 md:h-full
-          ${isOpen ? "block" : "hidden"} md:block`}
+      <div
+        className={`mt-20 md:mt-24 transition-all duration-300 absolute bg-gray-600 right-0 top-[-2rem] h-screen p-10 w-1/2 md:relative md:p-0 md:h-full md:w-full flex flex-col justify-between
+          ${isOpen ? "block" : "hidden"} md:flex`}
       >
-        {navRoutes.map((route) => (
-          <li key={route.name} className="flex gap-4 mb-8 items-center">
-            <div>{route.icon}</div>
-            <Link className="text-sm" to={route.href}>
-              {route.name.charAt(0).toUpperCase() + route.name.slice(1)}
-            </Link>
-          </li>
-        ))}
-      </ul>
+        {/* Navigation Links */}
+        <ul>
+          {navRoutes.map((route) => (
+            <li key={route.name} className="flex gap-4 mb-8 items-center ">
+              <div>{route.icon}</div>
+              <Link className="text-sm" to={`/${route.href}`}>
+                {route.name.charAt(0).toUpperCase() + route.name.slice(1)}
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        {/* User Info and Logout */}
+        <div className="mt-auto">
+          {/* User Info */}
+          {state.user && (
+            <div className="mb-6 p-4 bg-gray-700 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <IoPersonOutline size={16} />
+                <span className="text-sm font-medium">
+                  {state.user.first_name} {state.user.last_name}
+                </span>
+              </div>
+              <p className="text-xs text-gray-300">{state.user.department}</p>
+              <p className="text-xs text-gray-300">{state.user.email}</p>
+            </div>
+          )}
+
+          {/* Logout Button */}
+          <button
+            onClick={handleLogout}
+            disabled={isLoggingOut}
+            className="flex items-center gap-2 w-full p-2 text-sm text-red-300 hover:text-red-200 hover:bg-gray-700 rounded transition-colors disabled:opacity-50 hover:cursor-pointer "
+          >
+            <IoLogOutOutline size={16} />
+            {isLoggingOut ? "Signing out..." : "Sign out"}
+          </button>
+        </div>
+      </div>
     </nav>
   );
 }

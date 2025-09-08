@@ -6,7 +6,7 @@ const navRoutes = [
   {
     name: "home",
     icon: <IoHomeSharp size={16} />,
-    href: "/",
+    href: "",
   },
   {
     name: "vehicles",

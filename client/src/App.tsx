@@ -4,25 +4,46 @@ import "./App.css";
 import Narbar from "./components/Navbar.tsx";
 import Footer from "./components/Footer.tsx";
 import VehicleDetails from "./components/vechileComponents/VehicleDetails.tsx";
+import Login from "./components/auth/Login.tsx";
+import ProtectedRoute from "./components/auth/ProtectedRoute.tsx";
 // import pages here
 import Home from "./pages/Home.tsx";
 import Vendor from "./pages/Vendor.tsx";
 import Vehicles from "./pages/Vehicles.tsx";
+// import auth context
+import { useAuth } from "./contexts/AuthContext.tsx";
 
 function App() {
+  const { state } = useAuth();
+
   return (
     <div>
-      <div className="flex flex-col md:flex-row">
-        <Narbar />
-        <Routes>
-          <Route path="" element={<Home />} />
-          <Route path="vendors" element={<Vendor />} />
-          {/* VEHICLES ROUTES */}
-          <Route path="/vehicles" element={<Vehicles />} />
-          <Route path="/vehicles/:id" element={<VehicleDetails />} />
-        </Routes>
-      </div>
-      <Footer />
+      <Routes>
+        {/* Public routes */}
+        <Route path="/login" element={<Login />} />
+
+        {/* Protected routes */}
+        <Route
+          path="/*"
+          element={
+            <ProtectedRoute>
+              <div className="flex flex-col md:flex-row">
+                <Narbar />
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/vendors" element={<Vendor />} />
+                  {/* VEHICLES ROUTES */}
+                  <Route path="/vehicles" element={<Vehicles />} />
+                  <Route path="/vehicles/:id" element={<VehicleDetails />} />
+                </Routes>
+              </div>
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+
+      {/* Only show footer for authenticated users */}
+      {state.isAuthenticated && <Footer />}
     </div>
   );
 }

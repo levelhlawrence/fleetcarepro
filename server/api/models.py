@@ -63,6 +63,7 @@ class Employee(AbstractUser):
     objects = EmployeeManager()
 
     class Meta:
+        managed = True
         db_table = "employees"
 
     def __str__(self):
@@ -154,3 +155,70 @@ class Location(models.Model):
 
     def __str__(self):
         return self.name
+
+
+# Work Order Model
+class WorkOrder(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('in_progress', 'In Progress'),
+        ('completed', 'Completed'),
+        ('down', 'Vehicle Down'),
+        ('outsourced', 'Outsourced'),
+        ('in_service', 'Back In Service'),
+    ]
+    
+    PRIORITY_CHOICES = [
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+        ('critical', 'Critical'),
+    ]
+    
+    work_order_id = models.CharField(max_length=50, unique=True, primary_key=True)
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name='work_orders')
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='medium')
+    
+    # Personnel
+    assigned_to = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_work_orders')
+    created_by = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='created_work_orders')
+    
+    # Dates and tracking
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    due_date = models.DateField(null=True, blank=True)
+    started_at = models.DateTimeField(null=True, blank=True)
+    completed_at = models.DateTimeField(null=True, blank=True)
+    
+    # Cost tracking
+    estimated_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    actual_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    
+    # Work details
+    mileage_at_work = models.CharField(max_length=20, blank=True, null=True)
+    parts_needed = models.TextField(blank=True, null=True)
+    work_performed = models.TextField(blank=True, null=True)
+    notes = models.TextField(blank=True, null=True)
+    
+    # External service
+    vendor = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True, blank=True, related_name='work_orders')
+    external_work_order_no = models.CharField(max_length=100, blank=True, null=True)
+    
+    class Meta:
+        managed = True
+        db_table = 'work_orders'
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.work_order_id} - {self.vehicle.bus_no} ({self.get_status_display()})"
+    
+    def save(self, *args, **kwargs):
+        if not self.work_order_id:
+            # Auto-generate work order ID
+            from datetime import datetime
+            timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+            self.work_order_id = f"WO-{timestamp}"
+        super().save(*args, **kwargs)

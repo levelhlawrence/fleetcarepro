@@ -1,94 +1,142 @@
 import { FaRegNewspaper } from "react-icons/fa6";
 import { useNavigate } from "react-router";
-import axios from "axios";
 import { MdOutlineNavigateNext } from "react-icons/md";
 import { GrFormPrevious } from "react-icons/gr";
+import { IoSearchOutline } from "react-icons/io5";
+import { apiClient } from "../../utils/api";
 
-import { useEffect } from "react";
+interface Vehicle {
+  bus_no: string;
+  body_make?: string;
+  body_model?: string;
+  body_year?: string;
+  veh_make?: string;
+  assigned_shop?: string;
+}
+
+interface ShowVehiclesProps {
+  vehicles: Vehicle[];
+  nextPage: string | null;
+  prevPage: string | null;
+  count: number | null;
+  getVehicles: (url: string) => void;
+  isLoading?: boolean;
+  isSearchActive?: boolean;
+}
 
 export default function ShowVehicles({
   vehicles,
   nextPage,
   prevPage,
   getVehicles,
-  setVehNumber,
-}) {
+  isLoading = false,
+  isSearchActive = false,
+}: ShowVehiclesProps) {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    getVehicles();
-  }, []);
-
-  // open vehicle page on click
-  const vechPageRedirect = async (busNo) => {
-    const response = await axios.get(
-      `http://127.0.0.1:8000/api/vehicles/${busNo}`
-    );
-    const data = response.data;
-    console.log(data);
-    navigate(`${busNo}`, { state: { bus: data } });
+  // open vehicle page by ID on click
+  const vechPageRedirect = async (busNo: string) => {
+    try {
+      const response = await apiClient.get(`/vehicles/${busNo}`);
+      const data = response.data;
+      navigate(`${busNo}`, { state: { bus: data } });
+    } catch (error) {
+      console.error("Error fetching vehicle details:", error);
+    }
   };
 
   // render search results
-
   return (
     <aside className="border border-emerald-600 rounded-tl-md rounded-tr-md mb-18">
       <table className="table-auto w-full">
-        <thead className="bg-green-800">
+        <thead className="bg-emerald-800">
           <tr>
-            <th className="text-white px-4 py-2 text-sm font-bold text-gray-600">
+            <th className="text-white px-4 py-3 text-sm font-bold">
               Vehicle No.
             </th>
-            <th className="text-white px-4 py-2 text-sm font-bold text-gray-600">
-              Make
-            </th>
-            <th className="text-white px-4 py-2 text-sm font-bold text-gray-600">
-              Model
-            </th>
-            <th className="text-white px-4 py-2 text-sm font-bold text-gray-600">
-              Year
-            </th>
+            <th className="text-white px-4 py-3 text-sm font-bold">Make</th>
+            <th className="text-white px-4 py-3 text-sm font-bold">Model</th>
+            <th className="text-white px-4 py-3 text-sm font-bold">Year</th>
+            <th className="text-white px-4 py-3 text-sm font-bold">Location</th>
           </tr>
         </thead>
         <tbody>
-          {vehicles &&
-            vehicles?.map((veh) => {
-              return (
-                <tr
-                  onClick={() => vechPageRedirect(veh.bus_no)}
-                  key={veh.bus_no}
-                  id={veh.bus_no}
-                  className="text-center text-sm border-t border-emerald-600 hover:cursor-pointer hover:bg-emerald-50"
-                >
-                  <td className="py-2 flex justify-center gap-2">
+          {isLoading ? (
+            <tr>
+              <td colSpan={5} className="py-8 text-center">
+                <div className="flex items-center justify-center gap-2 text-gray-500">
+                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-gray-300 border-t-emerald-600"></div>
+                  Loading vehicles...
+                </div>
+              </td>
+            </tr>
+          ) : vehicles && vehicles.length > 0 ? (
+            vehicles.map((veh) => (
+              <tr
+                onClick={() => vechPageRedirect(veh.bus_no)}
+                key={veh.bus_no}
+                id={veh.bus_no}
+                className="text-center text-sm border-t border-emerald-600 hover:cursor-pointer hover:bg-emerald-50 transition-colors"
+              >
+                <td className="py-2 px-4">
+                  <div className="flex justify-center items-center gap-2">
                     <FaRegNewspaper className="p-0" />
-                    {veh.bus_no || "Blank"}
-                  </td>
-                  <td>{veh.body_make || "Blank"}</td>
-                  <td>{veh.body_model || "Blank"}</td>
-                  <td>{veh.body_year || "Blank"}</td>
-                </tr>
-              );
-            })}
+                    <span>{veh.bus_no || "N/A"}</span>
+                  </div>
+                </td>
+                <td className="py-2 px-4">
+                  {veh.body_make || veh.veh_make || "N/A"}
+                </td>
+                <td className="py-2 px-4">{veh.body_model || "N/A"}</td>
+                <td className="py-2 px-4">{veh.body_year || "N/A"}</td>
+                <td className="py-2 px-4">{veh.assigned_shop || "N/A"}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={5} className="py-8 text-center">
+                <div className="flex flex-col items-center gap-2 text-gray-500">
+                  <IoSearchOutline size={24} />
+                  <span>
+                    {isSearchActive
+                      ? "No vehicles found matching your search criteria"
+                      : "No vehicles available"}
+                  </span>
+                  {isSearchActive && (
+                    <span className="text-sm">
+                      Try adjusting your search filters
+                    </span>
+                  )}
+                </div>
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
       <div className="flex justify-between p-4 text-white border-t border-emerald-600">
         <button
-          onClick={() => prevPage && getVehicles(prevPage)}
-          className={`hover:cursor-pointer hover:bg-emerald-700 bg-emerald-600 flex items-center p-2 rounded transition ${
-            !prevPage && "bg-gray-500 text-gray-200 hover:hover:bg-gray-500"
+          onClick={() => prevPage && !isLoading && getVehicles(prevPage)}
+          disabled={!prevPage || isLoading}
+          className={`flex items-center p-2 rounded transition ${
+            !prevPage || isLoading
+              ? "bg-gray-500 text-gray-200 cursor-not-allowed"
+              : "bg-emerald-600 hover:bg-emerald-700 hover:cursor-pointer"
           }`}
         >
-          <GrFormPrevious size={24} /> <p className="text-sm">Prev</p>
+          <GrFormPrevious size={24} />
+          <span className="text-sm ml-1">Prev</span>
         </button>
 
         <button
-          onClick={() => nextPage && getVehicles(nextPage)}
-          className={`hover:cursor-pointer hover:bg-emerald-700 bg-emerald-600 flex items-center p-2 rounded transition ${
-            !nextPage && "bg-gray-500 text-gray-200 hover:hover:bg-gray-500"
+          onClick={() => nextPage && !isLoading && getVehicles(nextPage)}
+          disabled={!nextPage || isLoading}
+          className={`flex items-center p-2 rounded transition ${
+            !nextPage || isLoading
+              ? "bg-gray-500 text-gray-200 cursor-not-allowed"
+              : "bg-emerald-600 hover:bg-emerald-700 hover:cursor-pointer"
           }`}
         >
-          <p className="text-sm">Next</p>
+          <span className="text-sm mr-1">Next</span>
           <MdOutlineNavigateNext size={24} />
         </button>
       </div>
