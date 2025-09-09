@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 
+
 # All API models go here.
 
 # Vendor Model 
@@ -227,11 +228,26 @@ class WorkOrder(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.work_order_id:
-            # Auto-generate work order ID
             from datetime import datetime
-            timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-            self.work_order_id = f"WO-{timestamp}"
+            
+            now = datetime.now()
+            year = now.strftime("%Y")
+            month = now.strftime("%m")
+            
+            # Count how many work orders exist for this year-month
+            last_count = WorkOrder.objects.filter(
+                created_at__year=year,
+                created_at__month=month
+            ).count() + 1  # next number
+            
+            # Format as 2 digits (01, 02, 03…)
+            sequence = f"{last_count:02d}"
+            
+            self.work_order_id = f"WO-{year}-{month}-{sequence}"
+    
+        super().save(*args, **kwargs)
 
+# Task Model 
 class Task(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
