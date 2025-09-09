@@ -47,13 +47,13 @@ class Employee(AbstractUser):
     city = models.CharField(max_length=100, null=True, blank=True)
     state = models.CharField(max_length=100, null=True, blank=True)
     zipcode = models.CharField(max_length=20, null=True, blank=True)
+    position = models.CharField(max_length=20, null=True, blank=True)
     address = models.CharField(max_length=255, null=True, blank=True)
     number = models.CharField(max_length=15, null=True, blank=True)
-    department = models.CharField(max_length=100)
+    department = models.CharField(max_length=100, null=True, blank=True)
     employee_id = models.CharField(max_length=50, blank=True, null=True, unique=True)
     notes = models.TextField(blank=True, null=True)
     date_of_birth = models.DateField(null=True, blank=True)
-
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -63,7 +63,7 @@ class Employee(AbstractUser):
     objects = EmployeeManager()
 
     class Meta:
-        managed = True
+        
         db_table = "employees"
 
     def __str__(self):
@@ -73,7 +73,7 @@ class Employee(AbstractUser):
 # Vehicle Model
 
 class Vehicle(models.Model):
-    bus_no = models.CharField(max_length=50, unique=True, primary_key=True)   # Bus identifier
+    bus_no = models.CharField(max_length=50, unique=True, primary_key=True)
     veh_make = models.CharField(max_length=100, blank=True, null=True)
     body_model = models.CharField(max_length=100, blank=True, null=True)
     fuel_type = models.CharField(max_length=50, blank=True, null=True)
@@ -174,14 +174,24 @@ class WorkOrder(models.Model):
         ('high', 'High'),
         ('critical', 'Critical'),
     ]
+
+    REPAIR_TYPE_CHOICES = [
+        ('repair', 'Repair'),
+        ('inspection', 'Inspection'),
+        ('summer_inspection', 'Summer Inspection'),
+        ('state_inspection', 'State Inspection'),
+        ('trip_inspection', 'Trip Inspection'),
+    ]
     
-    work_order_id = models.CharField(max_length=50, unique=True, primary_key=True)
+    work_order_id = models.CharField(max_length=50, unique=True, blank=True)
+    
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name='work_orders')
+    
     title = models.CharField(max_length=200)
     description = models.TextField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='medium')
-    
+    repair_type = models.CharField(max_length=30, choices=REPAIR_TYPE_CHOICES, default='repair')
     # Personnel
     assigned_to = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_work_orders')
     created_by = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='created_work_orders')
@@ -221,4 +231,28 @@ class WorkOrder(models.Model):
             from datetime import datetime
             timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
             self.work_order_id = f"WO-{timestamp}"
-        super().save(*args, **kwargs)
+
+class Task(models.Model):
+    name = models.CharField(max_length=200)
+    description = models.TextField()
+    work_order = models.ForeignKey(WorkOrder, on_delete=models.CASCADE, related_name='tasks')
+    assigned_to = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, blank=True, related_name='tasks')
+    outsourced = models.ForeignKey(Vendor, on_delete=models.SET_NULL, null=True, blank=True, related_name='tasks')
+    parts_required = models.TextField(blank=True, null=True)
+    labor_hours = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    parts_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    labor_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    other_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    total_cost = models.DecimalField
+    completed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True) 
+    due_date = models.DateField(null=True, blank=True)
+    completed_at = models.DateTimeField(null=True, blank=True)
+    class Meta:
+        managed = True
+        db_table = 'work_order_tasks'
+        ordering = ['-created_at']
+    def __str__(self):
+        return f"{self.name} ({'Completed' if self.completed else 'Pending'})"  
+    

@@ -168,6 +168,16 @@ export default function VehicleDetails() {
                   className="px-2"
                 />
               </div>
+              <div>
+                <label htmlFor="tag">Driver: </label>
+                <input
+                  id="bus_driver"
+                  name="bus_driver"
+                  type="text"
+                  placeholder={veh.bus_driver || "NONE"}
+                  className="px-2"
+                />
+              </div>
             </div>
             <input
               className="bg-blue-400 w-1/4 mt-4 py-2 rounded hover:cursor-pointer hover:bg-blue-500 text-white transition"

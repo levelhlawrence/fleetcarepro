@@ -60,7 +60,7 @@ export default function Navbar() {
 
       {/* Menu */}
       <div
-        className={`mt-20 md:mt-24 transition-all duration-300 absolute bg-gray-600 right-0 top-[-2rem] h-screen p-10 w-1/2 md:relative md:p-0 md:h-full md:w-full flex flex-col justify-between
+        className={` mt-20 md:mt-24 transition-all duration-300 absolute bg-gray-600 right-0 top-[-2rem] max-h-screen p-10 w-1/2 md:relative md:p-0 md:h-[80vh] md:w-full flex flex-col justify-between items-center
           ${isOpen ? "block" : "hidden"} md:flex`}
       >
         {/* Navigation Links */}
@@ -76,7 +76,7 @@ export default function Navbar() {
         </ul>
 
         {/* User Info and Logout */}
-        <div className="mt-auto">
+        <div>
           {/* User Info */}
           {state.user && (
             <div className="mb-6 p-4 bg-gray-700 rounded-lg">

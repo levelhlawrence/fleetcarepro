@@ -10,6 +10,7 @@ import ProtectedRoute from "./components/auth/ProtectedRoute.tsx";
 import Home from "./pages/Home.tsx";
 import Vendor from "./pages/Vendor.tsx";
 import Vehicles from "./pages/Vehicles.tsx";
+import WorkOrders from "./pages/WorkOrders.tsx";
 // import auth context
 import { useAuth } from "./contexts/AuthContext.tsx";
 
@@ -35,6 +36,8 @@ function App() {
                   {/* VEHICLES ROUTES */}
                   <Route path="/vehicles" element={<Vehicles />} />
                   <Route path="/vehicles/:id" element={<VehicleDetails />} />
+                  {/* WORK ORDERS ROUTES */}
+                  <Route path="/work-orders" element={<WorkOrders />} />
                 </Routes>
               </div>
             </ProtectedRoute>

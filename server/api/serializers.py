@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
-from .models import Vendor, Vehicle, Location, Employee
+from .models import Vendor, Vehicle, Location, Employee, WorkOrder, Task
 
 class VendorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,6 +26,38 @@ class EmployeeSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True}
         }
+
+class WorkOrderSerializer(serializers.ModelSerializer):
+    vehicle_info = serializers.SerializerMethodField()
+    assigned_to_name = serializers.SerializerMethodField()
+    created_by_name = serializers.SerializerMethodField()
+    vendor_name = serializers.SerializerMethodField()
+    status_display = serializers.CharField(source='get_status_display', read_only=True)
+    priority_display = serializers.CharField(source='get_priority_display', read_only=True)
+    
+    class Meta:
+        model = WorkOrder
+        fields = '__all__'
+        read_only_fields = ('work_order_id', 'created_at', 'updated_at')
+    
+    def get_vehicle_info(self, obj):
+        return {
+            'bus_no': obj.vehicle.bus_no,
+            'make': obj.vehicle.veh_make or obj.vehicle.body_make,
+            'model': obj.vehicle.veh_model or obj.vehicle.body_model,
+            'year': obj.vehicle.body_year or obj.vehicle.chassis_year
+        }
+    
+    def get_assigned_to_name(self, obj):
+        if obj.assigned_to:
+            return f"{obj.assigned_to.first_name} {obj.assigned_to.last_name}"
+        return None
+    
+    def get_created_by_name(self, obj):
+        return f"{obj.created_by.first_name} {obj.created_by.last_name}"
+    
+    def get_vendor_name(self, obj):
+        return obj.vendor.name if obj.vendor else None
 
 # Authentication Serializers
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -109,3 +141,9 @@ class ChangePasswordSerializer(serializers.Serializer):
         if not user.check_password(value):
             raise serializers.ValidationError("Old password is incorrect.")
         return value
+
+class TaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = '__all__'
+        read_only_fields = ('task_id', 'created_at', 'updated_at')

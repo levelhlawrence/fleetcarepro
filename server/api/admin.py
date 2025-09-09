@@ -1,6 +1,6 @@
 from django.contrib import admin
 # Import the models to be registered
-from .models import Vendor, Vehicle, Location, Employee
+from .models import Vendor, Vehicle, Location, Employee, Task, WorkOrder
 
 admin.site.site_header = "FleetCarePro Admin"
 admin.site.site_title = "FleetCarePro Admin Portal"
@@ -12,3 +12,5 @@ admin.site.register(Vendor)
 admin.site.register(Vehicle)
 admin.site.register(Location)
 admin.site.register(Employee)
+admin.site.register(Task)
+admin.site.register(WorkOrder)

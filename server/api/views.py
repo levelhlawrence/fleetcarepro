@@ -6,13 +6,13 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import logout
-from django.db.models import Q
 
-from .models import Vendor, Vehicle, Location, Employee
+from .models import Vendor, Vehicle, Location, Employee, WorkOrder, Task
+from django.db.models import Q
 from .serializers import (
     VendorSerializer, VehicleSerializer, LocationSerializer, EmployeeSerializer,
-    CustomTokenObtainPairSerializer, UserRegistrationSerializer, 
-    UserProfileSerializer, ChangePasswordSerializer
+    WorkOrderSerializer, CustomTokenObtainPairSerializer, UserRegistrationSerializer, 
+    UserProfileSerializer, ChangePasswordSerializer, TaskSerializer
 )
 
 # VENDOR VIEWS
@@ -83,6 +83,50 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         if self.request.user.is_staff:
             return Employee.objects.all()
         return Employee.objects.filter(id=self.request.user.id)
+
+# WORK ORDER VIEWS
+class WorkOrderViewSet(viewsets.ModelViewSet):
+    queryset = WorkOrder.objects.all()
+    serializer_class = WorkOrderSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        queryset = WorkOrder.objects.select_related('vehicle', 'assigned_to', 'created_by', 'vendor')
+        
+        # Filter by status
+        status = self.request.query_params.get('status', None)
+        if status:
+            queryset = queryset.filter(status=status)
+        
+        # Filter by vehicle
+        vehicle = self.request.query_params.get('vehicle', None)
+        if vehicle:
+            queryset = queryset.filter(vehicle__bus_no__icontains=vehicle)
+        
+        # Filter by assigned user
+        assigned_to = self.request.query_params.get('assigned_to', None)
+        if assigned_to:
+            queryset = queryset.filter(assigned_to_id=assigned_to)
+        
+        # Filter by priority
+        priority = self.request.query_params.get('priority', None)
+        if priority:
+            queryset = queryset.filter(priority=priority)
+        
+        # Search across multiple fields
+        search = self.request.query_params.get('search', None)
+        if search:
+            queryset = queryset.filter(
+                Q(work_order_id__icontains=search) |
+                Q(title__icontains=search) |
+                Q(description__icontains=search) |
+                Q(vehicle__bus_no__icontains=search)
+            )
+        
+        return queryset.order_by('-created_at')
+    
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
 
 # AUTHENTICATION VIEWS
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -180,3 +224,8 @@ def user_info(request):
     """Get current user info"""
     serializer = UserProfileSerializer(request.user)
     return Response(serializer.data)
+
+class TaskViewSet(viewsets.ModelViewSet):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated]
