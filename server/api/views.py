@@ -7,12 +7,12 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import logout
 
-from .models import Vendor, Vehicle, Location, Employee, WorkOrder, Task
+from .models import Vendor, Vehicle, Location, Employee, WorkOrder, Task, Department
 from django.db.models import Q
 from .serializers import (
     VendorSerializer, VehicleSerializer, LocationSerializer, EmployeeSerializer,
     WorkOrderSerializer, CustomTokenObtainPairSerializer, UserRegistrationSerializer, 
-    UserProfileSerializer, ChangePasswordSerializer, TaskSerializer
+    UserProfileSerializer, ChangePasswordSerializer, TaskSerializer, DepartmentSerializer
 )
 
 # VENDOR VIEWS
@@ -228,4 +228,9 @@ def user_info(request):
 class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated]
+
+class DepartmentViewSet(viewsets.ModelViewSet):
+    queryset = Department.objects.all()
+    serializer_class = DepartmentSerializer
     permission_classes = [IsAuthenticated]

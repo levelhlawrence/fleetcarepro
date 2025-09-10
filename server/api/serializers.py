@@ -2,12 +2,17 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
-from .models import Vendor, Vehicle, Location, Employee, WorkOrder, Task
+from .models import Vendor, Vehicle, Location, Employee, WorkOrder, Task, Department
 
 class VendorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vendor
         fields = '__all__'
+
+class DepartmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Department
+        fields = '__all__'       
 
 class VehicleSerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,6 +25,7 @@ class LocationSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class EmployeeSerializer(serializers.ModelSerializer):
+    department = DepartmentSerializer(read_only=True)
     class Meta:
         model = Employee
         fields = '__all__'
@@ -67,16 +73,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         data = super().validate(attrs)
         
         # Add user data to the response
-        data['user'] = {
-            'id': self.user.id,
-            'email': self.user.email,
-            'first_name': self.user.first_name,
-            'last_name': self.user.last_name,
-            'department': self.user.department,
-            'employee_id': self.user.employee_id,
-            'is_staff': self.user.is_staff,
-            'is_superuser': self.user.is_superuser,
-        }
+        data['user'] = UserProfileSerializer(self.user).data
         
         return data
 
@@ -121,9 +118,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'email', 'first_name', 'last_name', 'employee_id', 'department',
             'city', 'state', 'zipcode', 'address', 'number', 'date_of_birth',
-            'notes', 'date_joined', 'is_active'
+            'notes', 'date_joined', 'is_active', 'position', 'updated_at', 'last_login'
         )
         read_only_fields = ('id', 'email', 'employee_id', 'date_joined')
+        
 
 class ChangePasswordSerializer(serializers.Serializer):
     """Serializer for changing password"""
@@ -147,3 +145,4 @@ class TaskSerializer(serializers.ModelSerializer):
         model = Task
         fields = '__all__'
         read_only_fields = ('task_id', 'created_at', 'updated_at')
+

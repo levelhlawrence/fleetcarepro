@@ -4,7 +4,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from .views import (
     VendorViewSet, VehicleViewSet, LocationViewSet, EmployeeViewSet,
     WorkOrderViewSet, CustomTokenObtainPairView, RegisterView, LogoutView, 
-    UserProfileView, ChangePasswordView, user_info, TaskViewSet
+    UserProfileView, ChangePasswordView, user_info, TaskViewSet, DepartmentViewSet
 )
 
 router = routers.DefaultRouter()
@@ -16,6 +16,8 @@ router.register(r'locations', LocationViewSet, basename='location')
 router.register(r'employees', EmployeeViewSet, basename='employee')
 router.register(r'work-orders', WorkOrderViewSet, basename='workorder')
 router.register(r'tasks', TaskViewSet, basename='task')
+router.register(r'departments', DepartmentViewSet, basename='department')
+
 
 
 

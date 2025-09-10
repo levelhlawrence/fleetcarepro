@@ -112,26 +112,17 @@ const Login: React.FC = () => {
 
   return (
     <div className="md:flex items-center md:justify-between bg-gray-50">
-      {/* Hero Image (LEFT) */}
-      <div className="relative w-1/2">
-        <div className="bg-emerald-700/25 absolute h-screen w-full z-10"></div>
-        <img
-          src={loginImage}
-          alt="Login"
-          className="w-full h-screen object-cover object-center"
-        />
-      </div>
-
-      <div className="max-w-1/2 w-full flex justify-center">
-        <div className="px-10">
+      <div className="w-full flex justify-center">
+        <div className="px-10 w-[80vw] mt-10 ">
           <div className="flex items-center flex-col">
-            <img src={maintLogo} alt="fleetcarepro logo" className="w-35" />
-            <h2 className="mt-6 text-center text-2xl text-gray-900">
-              Welcome to
+            {/* logo image */}
+            <img src={maintLogo} alt="fleetcarepro logo" className="w-20" />
+
+            <h2 className="text-center mt-2 text-lg font-semibold">
+              FleetCare
+              <span className="text-emerald-700 font-extrabold">Pro</span>
             </h2>
-            <h2 className="text-center mt-[-0.3rem] text-3xl font-extrabold text-gray-900">
-              FleetCare Pro
-            </h2>
+            <h2 className="mt-10 text-center text-2xl text-gray-900">Login</h2>
             <p className="mt-2 text-center text-sm text-gray-600">
               Enter your credentials to access the fleet management system
             </p>
@@ -243,7 +234,7 @@ const Login: React.FC = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="hover:cursor-pointer group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
                 {isLoading ? (
                   <>
@@ -277,7 +268,7 @@ const Login: React.FC = () => {
 
             <div className="text-center">
               <p className="text-sm text-gray-600">
-                Don't have an account?{" "}
+                Don't have an account?
                 <Link
                   to="/register"
                   className="font-medium text-blue-600 hover:text-blue-500"
@@ -287,6 +278,15 @@ const Login: React.FC = () => {
               </p>
             </div>
           </form>
+        </div>
+        {/* Hero Image (LEFT) */}
+        <div className="relative w-full">
+          <div className="absolute left-0 h-screen w-full z-10 bg-[radial-gradient(circle,rgba(4,120,87,0.4)_30%,_rgba(6,95,70,1)_100%)]"></div>
+          <img
+            src={loginImage}
+            alt="Login"
+            className=" w-full h-screen object-cover object-center"
+          />
         </div>
       </div>
     </div>

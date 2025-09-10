@@ -11,10 +11,22 @@ interface User {
   email: string;
   first_name: string;
   last_name: string;
-  department: string;
   employee_id: string;
   is_staff?: boolean;
   is_superuser?: boolean;
+  department?: string | null;
+  position?: string | null;
+  address?: string | null;
+  city?: string | null;
+  state?: string | null;
+  zipcode?: string | null;
+  notes?: string | null;
+  number?: string | null;
+  date_joined?: string | null;
+  date_of_birth?: string | null;
+  last_login?: string | null;
+  created_at?: string | null;
+  updated_at?: string | null;
 }
 
 interface AuthState {

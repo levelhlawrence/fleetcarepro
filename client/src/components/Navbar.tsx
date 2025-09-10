@@ -60,7 +60,7 @@ export default function Navbar() {
 
       {/* Menu */}
       <div
-        className={` mt-20 md:mt-24 transition-all duration-300 absolute bg-gray-600 right-0 top-[-2rem] max-h-screen p-10 w-1/2 md:relative md:p-0 md:h-[80vh] md:w-full flex flex-col justify-between items-center
+        className={` mt-20 md:mt-24 transition-all duration-300 absolute bg-gray-600 right-0 top-[-2rem] max-h-screen py-10 w-1/2 md:relative md:p-0 md:h-[80vh] md:w-full flex flex-col justify-between items-center
           ${isOpen ? "block" : "hidden"} md:flex`}
       >
         {/* Navigation Links */}
@@ -75,22 +75,22 @@ export default function Navbar() {
           ))}
         </ul>
 
+        {/* User Info */}
+        {state.user && (
+          <div className="mb-6 p-4 bg-gray-700 rounded-lg">
+            <div className="flex items-center gap-2 mb-2">
+              <IoPersonOutline size={16} />
+              <span className="text-sm font-medium">
+                {state.user.first_name} {state.user.last_name}
+              </span>
+            </div>
+            <p className="text-xs text-gray-300">{state.user.department}</p>
+            <p className="text-xs text-gray-300">{state.user.email}</p>
+          </div>
+        )}
+
         {/* User Info and Logout */}
         <div>
-          {/* User Info */}
-          {state.user && (
-            <div className="mb-6 p-4 bg-gray-700 rounded-lg">
-              <div className="flex items-center gap-2 mb-2">
-                <IoPersonOutline size={16} />
-                <span className="text-sm font-medium">
-                  {state.user.first_name} {state.user.last_name}
-                </span>
-              </div>
-              <p className="text-xs text-gray-300">{state.user.department}</p>
-              <p className="text-xs text-gray-300">{state.user.email}</p>
-            </div>
-          )}
-
           {/* Logout Button */}
           <button
             onClick={handleLogout}

@@ -10,14 +10,14 @@ const navRoutes = [
     href: "",
   },
   {
-    name: "vehicles",
-    icon: <BsTruckFrontFill size={16} />,
-    href: "vehicles",
-  },
-  {
     name: "work orders",
     icon: <FaTools size={16} />,
     href: "work-orders",
+  },
+  {
+    name: "vehicles",
+    icon: <BsTruckFrontFill size={16} />,
+    href: "vehicles",
   },
   {
     name: "vendors",
