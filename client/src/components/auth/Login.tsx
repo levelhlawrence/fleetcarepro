@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router";
 import { useAuth } from "../../contexts/AuthContext";
 import { authAPI } from "../../utils/api";
-import maintLogo from "../../images/maintLogo1.svg";
+
+import maintLogo from "../../assets/maintLogo1.svg";
 import loginImage from "../../images/school_bus.jpg";
 
 interface LoginFormData {
@@ -111,24 +112,27 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="md:flex items-center md:justify-between bg-gray-50">
-      <div className="w-full flex justify-center">
-        <div className="px-10 w-[80vw] mt-10 ">
+    <div className="bg-gray-50">
+      <div className="w-full flex justify-center items-center">
+        <div className="md:min-w-[40vw] relative z-40  bg-gray-50 md:mt-0  mt-14 py-8 px-8 mx-8 rounded-xl">
           <div className="flex items-center flex-col">
             {/* logo image */}
             <img src={maintLogo} alt="fleetcarepro logo" className="w-20" />
 
-            <h2 className="text-center mt-2 text-lg font-semibold">
+            <h2 className="text-center mt-2 text-md font-semibold">
               FleetCare
-              <span className="text-emerald-700 font-extrabold">Pro</span>
+              <span className="text-cyan-700 font-extrabold">Pro</span>
             </h2>
             <h2 className="mt-10 text-center text-2xl text-gray-900">Login</h2>
-            <p className="mt-2 text-center text-sm text-gray-600">
+            <p className="mt-2 text-center text-sm text-gray-600 md:w-2/3">
               Enter your credentials to access the fleet management system
             </p>
           </div>
 
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <form
+            className="mt-8 space-y-6 md:mx-10 lg:mx-[40]"
+            onSubmit={handleSubmit}
+          >
             <div className="space-y-4">
               <div>
                 <label
@@ -279,13 +283,13 @@ const Login: React.FC = () => {
             </div>
           </form>
         </div>
-        {/* Hero Image (LEFT) */}
-        <div className="relative w-full">
-          <div className="absolute left-0 h-screen w-full z-10 bg-[radial-gradient(circle,rgba(4,120,87,0.4)_30%,_rgba(6,95,70,1)_100%)]"></div>
+        {/* Hero Image (RIGHT) */}
+        <div className="md:relative w-full absolute top-0">
+          <div className="absolute left-0 h-screen w-full z-10 bg-[radial-gradient(circle,rgba(8,145,178,0.4)_30%,_rgba(21,94,117)_100%)]"></div>
           <img
             src={loginImage}
-            alt="Login"
-            className=" w-full h-screen object-cover object-center"
+            alt="Login hero"
+            className="w-full h-screen object-cover object-center"
           />
         </div>
       </div>

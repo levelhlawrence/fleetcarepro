@@ -1,4 +1,4 @@
-import fleetCareLogo from "../images/maintLogo1.svg";
+import fleetCareLogo from "../assets/maintLogo1.svg";
 import { useState } from "react";
 import { navRoutes } from "../utils/routes";
 import {
@@ -37,7 +37,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-gray-600 text-white md:min-h-screen md:min-w-1/4 flex items-center md:flex-col justify-between md:justify-start px-4 py-2 relative">
+    <nav className="bg-gray-700 text-white md:min-h-screen md:min-w-1/4 flex items-center md:flex-col justify-between md:justify-start px-4 py-2 relative z-100 ">
       {/* Logo */}
       <div id="fleet-logo" className="flex items-center gap-2 md:mt-4">
         <img
@@ -45,8 +45,8 @@ export default function Navbar() {
           src={fleetCareLogo}
           alt="fleetcarepro-icon"
         />
-        <h4 className="text-xl">
-          Fleetcare<span className="font-bold text-emerald-400">Pro</span>
+        <h4 className="text-xl text-gray-200">
+          Fleetcare<span className="font-bold text-cyan-600">Pro</span>
         </h4>
       </div>
 
@@ -60,7 +60,7 @@ export default function Navbar() {
 
       {/* Menu */}
       <div
-        className={` mt-20 md:mt-24 transition-all duration-300 absolute bg-gray-600 right-0 top-[-2rem] max-h-screen py-10 w-1/2 md:relative md:p-0 md:h-[80vh] md:w-full flex flex-col justify-between items-center
+        className={` mt-21 md:mt-24 transition-all duration-300 absolute bg-gray-700 right-0 top-[-2rem] max-h-screen h-[85vh] rounded-bl-xl py-10 w-1/2 md:relative md:p-0 md:h-[80vh] md:w-full flex flex-col justify-between items-center
           ${isOpen ? "block" : "hidden"} md:flex`}
       >
         {/* Navigation Links */}
@@ -77,7 +77,7 @@ export default function Navbar() {
 
         {/* User Info */}
         {state.user && (
-          <div className="mb-6 p-4 bg-gray-700 rounded-lg">
+          <div className="mb-6 p-4 w-full bg-gray-800">
             <div className="flex items-center gap-2 mb-2">
               <IoPersonOutline size={16} />
               <span className="text-sm font-medium">

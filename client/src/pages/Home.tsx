@@ -1,3 +1,4 @@
+import bgHeroImg from "../images/heroBusImg.jpg";
 import { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { apiClient } from "../utils/api";
@@ -15,6 +16,8 @@ import {
   IoWarning,
   IoTime,
 } from "react-icons/io5";
+
+import TotalFleet from "../components/homeComponents/TotalFleet";
 
 interface DashboardStats {
   totalVehicles: number;
@@ -182,8 +185,11 @@ function Home() {
     <div className="min-h-screen w-full px-8 py-8 bg-gray-50">
       {/* Header Section */}
       <div className="mb-8">
-        <div className="relative rounded-lg flex bg-emerald-700 bg-[url('https://gray-wtvg-prod.gtv-cdn.com/resizer/v2/EAIZEBRT5FALNHYGWAERM632LA.jpg?auth=1d748da681100702dbef808d2b5ed5b4136ecdb9d4472e59c362d7a2eec24a06&width=800&height=450&smart=true')] bg-cover p-8 flex-col md:flex-row md:items-center md:justify-between">
-          <div className="absolute rounded-lg top-0 left-0 w-full bg-emerald-800/60 z-10 h-full"></div>
+        <div
+          style={{ backgroundImage: `url(${bgHeroImg})` }}
+          className="relative rounded-lg flex opacity-95 bg-cover bg-center p-8 flex-col md:flex-row md:items-center md:justify-between"
+        >
+          <div className="absolute rounded-lg top-0 left-0 w-full bg-cyan-900/80 z-10 h-full"></div>
           <div className="relative z-20">
             <h1 className="text-2xl font-bold text-white mb-2">
               {getGreeting()}, {state.user?.first_name}!
@@ -195,13 +201,13 @@ function Home() {
               Welcome back. Here's the fleet overview for today.
             </p>
           </div>
-          <div className="relative z-20 text-yellow-500">
+          <div className="relative z-20 text-yellow-300">
             <div className="flex text-sm items-center gap-2">
               <FaCalendarDay />
               <span>{formatTime(currentTime)}</span>
             </div>
             <div className="text-sm text-gray-600 mt-1">
-              <span className="font-medium text-white">{}</span>
+              <span className="font-medium text-whit  e">{}</span>
             </div>
           </div>
         </div>
@@ -209,21 +215,7 @@ function Home() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-blue-500">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-sm font-medium text-gray-600 mb-1">
-                Total Fleet
-              </h3>
-              <p className="text-3xl font-bold text-gray-900">
-                {stats.totalVehicles}
-              </p>
-            </div>
-            <div className="p-3 bg-blue-100 rounded-full">
-              <FaBus className="text-blue-600" size={24} />
-            </div>
-          </div>
-        </div>
+        <TotalFleet stats={stats} />
 
         <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-yellow-500">
           <div className="flex items-center justify-between">

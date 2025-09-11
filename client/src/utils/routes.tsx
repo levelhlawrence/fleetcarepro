@@ -12,7 +12,7 @@ const navRoutes = [
   {
     name: "work orders",
     icon: <FaTools size={16} />,
-    href: "work-orders",
+    href: "workorders",
   },
   {
     name: "vehicles",

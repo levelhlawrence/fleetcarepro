@@ -37,7 +37,7 @@ function App() {
                   <Route path="/vehicles" element={<Vehicles />} />
                   <Route path="/vehicles/:id" element={<VehicleDetails />} />
                   {/* WORK ORDERS ROUTES */}
-                  <Route path="/work-orders" element={<WorkOrders />} />
+                  <Route path="/workorders" element={<WorkOrders />} />
                 </Routes>
               </div>
             </ProtectedRoute>
