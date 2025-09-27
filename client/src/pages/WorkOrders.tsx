@@ -1,14 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { apiClient } from '../utils/api';
-import { useAuth } from '../contexts/AuthContext';
-import WorkOrdersList from '../components/workOrders/WorkOrdersList';
-import WorkOrderFilters from '../components/workOrders/WorkOrderFilters';
-import CreateWorkOrder from '../components/workOrders/CreateWorkOrder';
-import { 
-  FaPlus, 
-  FaTools,
-  FaChartBar
-} from 'react-icons/fa';
+import React, { useState, useEffect, useCallback } from "react";
+import { apiClient } from "../utils/api";
+import { useAuth } from "../contexts/AuthContext";
+import WorkOrdersList from "../components/workOrders/WorkOrdersList";
+import WorkOrderFilters from "../components/workOrders/WorkOrderFilters";
+import CreateWorkOrder from "../components/workOrders/CreateWorkOrder";
+import { FaPlus, FaTools, FaChartBar } from "react-icons/fa";
 
 export interface WorkOrder {
   work_order_id: string;
@@ -21,9 +17,15 @@ export interface WorkOrder {
   };
   title: string;
   description: string;
-  status: 'pending' | 'in_progress' | 'completed' | 'down' | 'outsourced' | 'in_service';
+  status:
+    | "pending"
+    | "in_progress"
+    | "completed"
+    | "down"
+    | "outsourced"
+    | "in_service";
   status_display: string;
-  priority: 'low' | 'medium' | 'high' | 'critical';
+  priority: "low" | "medium" | "high" | "critical";
   priority_display: string;
   assigned_to: number | null;
   assigned_to_name: string | null;
@@ -60,11 +62,11 @@ const WorkOrders: React.FC = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
   const [filters, setFilters] = useState<Filters>({
-    status: '',
-    priority: '',
-    vehicle: '',
-    assigned_to: '',
-    search: '',
+    status: "",
+    priority: "",
+    vehicle: "",
+    assigned_to: "",
+    search: "",
   });
 
   const [statusCounts, setStatusCounts] = useState({
@@ -78,55 +80,57 @@ const WorkOrders: React.FC = () => {
 
   const buildQueryParams = (filters: Filters): URLSearchParams => {
     const params = new URLSearchParams();
-    
+
     Object.entries(filters).forEach(([key, value]) => {
       if (value.trim()) {
         params.append(key, value.trim());
       }
     });
-    
+
     return params;
   };
 
-  const fetchWorkOrders = useCallback(async (currentFilters?: Filters) => {
-    try {
-      setIsLoading(true);
-      const filtersToUse = currentFilters || filters;
-      const queryParams = buildQueryParams(filtersToUse);
-      const url = `/work-orders/?${queryParams.toString()}`;
-      
-      const response = await apiClient.get(url);
-      const data = response.data;
-      
-      setWorkOrders(data.results || []);
-      setTotalCount(data.count || 0);
-      
-      // Calculate status counts
-      const counts = {
-        pending: 0,
-        in_progress: 0,
-        completed: 0,
-        down: 0,
-        outsourced: 0,
-        in_service: 0,
-      };
-      
-      (data.results || []).forEach((wo: WorkOrder) => {
-        if (counts.hasOwnProperty(wo.status)) {
-          counts[wo.status as keyof typeof counts]++;
-        }
-      });
-      
-      setStatusCounts(counts);
-      
-    } catch (error) {
-      console.error('Error fetching work orders:', error);
-      setWorkOrders([]);
-      setTotalCount(0);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [filters]);
+  const fetchWorkOrders = useCallback(
+    async (currentFilters?: Filters) => {
+      try {
+        setIsLoading(true);
+        const filtersToUse = currentFilters || filters;
+        const queryParams = buildQueryParams(filtersToUse);
+        const url = `/work-orders/?${queryParams.toString()}`;
+
+        const response = await apiClient.get(url);
+        const data = response.data;
+
+        setWorkOrders(data.results || []);
+        setTotalCount(data.count || 0);
+
+        // Calculate status counts
+        const counts = {
+          pending: 0,
+          in_progress: 0,
+          completed: 0,
+          down: 0,
+          outsourced: 0,
+          in_service: 0,
+        };
+
+        (data.results || []).forEach((wo: WorkOrder) => {
+          if (counts.hasOwnProperty(wo.status)) {
+            counts[wo.status as keyof typeof counts]++;
+          }
+        });
+
+        setStatusCounts(counts);
+      } catch (error) {
+        console.error("Error fetching work orders:", error);
+        setWorkOrders([]);
+        setTotalCount(0);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [filters]
+  );
 
   const handleFiltersChange = useCallback((newFilters: Filters) => {
     setFilters(newFilters);
@@ -138,19 +142,26 @@ const WorkOrders: React.FC = () => {
     fetchWorkOrders();
   }, [fetchWorkOrders]);
 
-  const handleStatusUpdate = useCallback((workOrderId: string, newStatus: string) => {
-    // Optimistically update the local state
-    setWorkOrders(prev => 
-      prev.map(wo => 
-        wo.work_order_id === workOrderId 
-          ? { ...wo, status: newStatus as WorkOrder['status'], status_display: newStatus.replace('_', ' ') }
-          : wo
-      )
-    );
-    
-    // Refetch to ensure data consistency
-    fetchWorkOrders();
-  }, [fetchWorkOrders]);
+  const handleStatusUpdate = useCallback(
+    (workOrderId: string, newStatus: string) => {
+      // Optimistically update the local state
+      setWorkOrders((prev) =>
+        prev.map((wo) =>
+          wo.work_order_id === workOrderId
+            ? {
+                ...wo,
+                status: newStatus as WorkOrder["status"],
+                status_display: newStatus.replace("_", " "),
+              }
+            : wo
+        )
+      );
+
+      // Refetch to ensure data consistency
+      fetchWorkOrders();
+    },
+    [fetchWorkOrders]
+  );
 
   useEffect(() => {
     fetchWorkOrders();
@@ -162,7 +173,9 @@ const WorkOrders: React.FC = () => {
       <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Work Orders</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Work Orders
+            </h1>
             <p className="text-gray-600">
               Manage and track maintenance work orders for your fleet
             </p>
@@ -180,29 +193,53 @@ const WorkOrders: React.FC = () => {
 
         {/* Status Summary Cards */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-6">
-          <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-            <div className="text-2xl font-bold text-yellow-700">{statusCounts.pending}</div>
-            <div className="text-sm text-yellow-600">Pending</div>
+          <div className="bg-yellow-50 hover:bg-yellow-100 p-4 rounded-lg border border-yellow-200 group hover:border-yellow-300 hover:cursor-pointer transition">
+            <div className="text-2xl font-bold text-yellow-700 group-hover:text-yellow-800">
+              {statusCounts.pending}
+            </div>
+            <div className="text-sm text-yellow-600 group-hover:text-yellow-700">
+              Pending
+            </div>
           </div>
-          <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-            <div className="text-2xl font-bold text-blue-700">{statusCounts.in_progress}</div>
-            <div className="text-sm text-blue-600">In Progress</div>
+          <div className="bg-blue-50 hover:bg-blue-100 transition group hover:cursor-pointer p-4 rounded-lg border border-blue-200 hover:border-blue-300">
+            <div className="text-2xl font-bold text-blue-700 group-hover:text-blue-800">
+              {statusCounts.in_progress}
+            </div>
+            <div className="text-sm text-blue-600 group-hover:text-blue-700">
+              In Progress
+            </div>
           </div>
-          <div className="bg-red-50 p-4 rounded-lg border border-red-200">
-            <div className="text-2xl font-bold text-red-700">{statusCounts.down}</div>
-            <div className="text-sm text-red-600">Vehicle Down</div>
+          <div className="group transition hover:cursor-pointer hover:bg-red-100 bg-red-50 p-4 rounded-lg border border-red-200 hover:border-red-300">
+            <div className="text-2xl font-bold text-red-700 group-hover:text-red-800">
+              {statusCounts.down}
+            </div>
+            <div className="text-sm text-red-600 group-hover:text-red-700">
+              Vehicle Down
+            </div>
           </div>
-          <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
-            <div className="text-2xl font-bold text-purple-700">{statusCounts.outsourced}</div>
-            <div className="text-sm text-purple-600">Outsourced</div>
+          <div className="transition group hover:bg-purple-100 hover:cursor-pointer bg-purple-50 p-4 rounded-lg border border-purple-200 hover:border-purple-300">
+            <div className="text-2xl font-bold text-purple-700 group-hover:text-purple-800">
+              {statusCounts.outsourced}
+            </div>
+            <div className="text-sm text-purple-600 group-hover:text-purple-700">
+              Outsourced
+            </div>
           </div>
-          <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-            <div className="text-2xl font-bold text-green-700">{statusCounts.completed}</div>
-            <div className="text-sm text-green-600">Completed</div>
+          <div className="bg-green-50 group transition p-4 hover:bg-green-100 hover:cursor-pointer rounded-lg border border-green-200 hover:border-green-300">
+            <div className="text-2xl font-bold text-green-700 group-hover:text-green-800">
+              {statusCounts.completed}
+            </div>
+            <div className="text-sm text-green-600 group-hover:text-green-700">
+              Completed
+            </div>
           </div>
-          <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
-            <div className="text-2xl font-bold text-emerald-700">{statusCounts.in_service}</div>
-            <div className="text-sm text-emerald-600">In Service</div>
+          <div className="bg-emerald-50 hover:bg-emerald-100 p-4 rounded-lg border border-emerald-200 hover:border-emerald-300 hover:cursor-pointer transition group">
+            <div className="text-2xl font-bold text-emerald-700 group-hover:text-emerald-800">
+              {statusCounts.in_service}
+            </div>
+            <div className="text-sm text-emerald-600 group-hover:text-emerald-700">
+              In Service
+            </div>
           </div>
         </div>
       </div>

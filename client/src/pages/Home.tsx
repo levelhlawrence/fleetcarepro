@@ -2,10 +2,10 @@ import bgHeroImg from "../images/heroBusImg.jpg";
 import { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { apiClient } from "../utils/api";
+// import ICONS
 import {
   FaBus,
   FaTools,
-  FaExclamationTriangle,
   FaClock,
   FaChartLine,
   FaCalendarDay,
@@ -17,7 +17,13 @@ import {
   IoTime,
 } from "react-icons/io5";
 
+// import COMPONENTS
 import TotalFleet from "../components/homeComponents/TotalFleet";
+import ActiveWorkOrders from "../components/homeComponents/ActiveWorkOrders";
+import CriticalIssues from "../components/homeComponents/Criticalissues";
+import CompletedToday from "../components/homeComponents/CompletedToday";
+import VehiclesDown from "../components/homeComponents/VehiclesDown";
+import PendingMaintenance from "../components/homeComponents/PendingMaintenance";
 
 interface DashboardStats {
   totalVehicles: number;
@@ -187,9 +193,9 @@ function Home() {
       <div className="mb-8">
         <div
           style={{ backgroundImage: `url(${bgHeroImg})` }}
-          className="relative rounded-lg flex opacity-95 bg-cover bg-center p-8 flex-col md:flex-row md:items-center md:justify-between"
+          className="relative rounded-lg flex bg-cover bg-center p-8 flex-col md:flex-row md:items-center md:justify-between"
         >
-          <div className="absolute rounded-lg top-0 left-0 w-full bg-cyan-900/80 z-10 h-full"></div>
+          <div className="absolute rounded-lg top-0 left-0 w-full bg-cyan-900/75 z-10 h-full"></div>
           <div className="relative z-20">
             <h1 className="text-2xl font-bold text-white mb-2">
               {getGreeting()}, {state.user?.first_name}!
@@ -216,86 +222,11 @@ function Home() {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
         <TotalFleet stats={stats} />
-
-        <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-yellow-500">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-sm font-medium text-gray-600 mb-1">
-                Active Work Orders
-              </h3>
-              <p className="text-3xl font-bold text-gray-900">
-                {stats.activeWorkOrders}
-              </p>
-            </div>
-            <div className="p-3 bg-yellow-100 rounded-full">
-              <FaTools className="text-yellow-600" size={24} />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-red-500">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-sm font-medium text-gray-600 mb-1">
-                Critical Issues
-              </h3>
-              <p className="text-3xl font-bold text-gray-900">
-                {stats.criticalIssues}
-              </p>
-            </div>
-            <div className="p-3 bg-red-100 rounded-full">
-              <FaExclamationTriangle className="text-red-600" size={24} />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-green-500">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-sm font-medium text-gray-600 mb-1">
-                Completed Today
-              </h3>
-              <p className="text-3xl font-bold text-gray-900">
-                {stats.completedToday}
-              </p>
-            </div>
-            <div className="p-3 bg-green-100 rounded-full">
-              <IoCheckmarkCircle className="text-green-600" size={24} />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-red-600">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-sm font-medium text-gray-600 mb-1">
-                Vehicles Down
-              </h3>
-              <p className="text-3xl font-bold text-gray-900">
-                {stats.vehiclesDown}
-              </p>
-            </div>
-            <div className="p-3 bg-red-100 rounded-full">
-              <IoWarning className="text-red-600" size={24} />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-orange-500">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-sm font-medium text-gray-600 mb-1">
-                Pending Maintenance
-              </h3>
-              <p className="text-3xl font-bold text-gray-900">
-                {stats.pendingMaintenance}
-              </p>
-            </div>
-            <div className="p-3 bg-orange-100 rounded-full">
-              <IoTime className="text-orange-600" size={24} />
-            </div>
-          </div>
-        </div>
+        <ActiveWorkOrders stats={stats} />
+        <CriticalIssues stats={stats} />
+        <CompletedToday stats={stats} />
+        <VehiclesDown stats={stats} />
+        <PendingMaintenance stats={stats} />
       </div>
 
       {/* Recent Activity */}
