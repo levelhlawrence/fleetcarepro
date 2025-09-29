@@ -1,8 +1,18 @@
 import { IoTime } from "react-icons/io5";
+import { useNavigate } from "react-router";
 
 export default function PendingMaintenance({ stats }) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/workorders/status/pending");
+  };
+
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-orange-500 group hover:bg-orange-50 hover:cursor-pointer hover:border-orange-600 transition  hover:shadow-md">
+    <div 
+      onClick={handleClick}
+      className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-orange-500 group hover:bg-orange-50 hover:cursor-pointer hover:border-orange-600 transition  hover:shadow-md"
+    >
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-sm font-medium text-gray-600 group-hover:text-gray-700 mb-1">

@@ -1,8 +1,18 @@
 import { IoWarning } from "react-icons/io5";
+import { useNavigate } from "react-router";
 
 export default function VehiclesDown({ stats }) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/workorders/status/down");
+  };
+
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-red-600 group hover:shadow-medium transition hover:bg-red-50 hover:cursor-pointer hover:border-red-700">
+    <div 
+      onClick={handleClick}
+      className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-red-600 group hover:shadow-medium transition hover:bg-red-50 hover:cursor-pointer hover:border-red-700"
+    >
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-sm font-medium text-gray-600 group-hover:text-gray-700 mb-1">

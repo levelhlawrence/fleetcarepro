@@ -1,8 +1,18 @@
 import { FaExclamationTriangle } from "react-icons/fa";
+import { useNavigate } from "react-router";
 
 export default function CriticalIssues({ stats }) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/workorders?priority=critical");
+  };
+
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-red-500 hover:border-red-600 group hover:cursor-pointer hover:shadow-md transition hover:bg-red-50">
+    <div 
+      onClick={handleClick}
+      className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-red-500 hover:border-red-600 group hover:cursor-pointer hover:shadow-md transition hover:bg-red-50"
+    >
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-sm font-medium text-gray-600 group-hover:text-gray-700 mb-1">

@@ -11,6 +11,7 @@ import Home from "./pages/Home.tsx";
 import Vendor from "./pages/Vendor.tsx";
 import Vehicles from "./pages/Vehicles.tsx";
 import WorkOrders from "./pages/WorkOrders.tsx";
+import WorkOrderStatus from "./pages/WorkOrderStatus.tsx";
 // import auth context
 import { useAuth } from "./contexts/AuthContext.tsx";
 
@@ -38,6 +39,7 @@ function App() {
                   <Route path="/vehicles/:id" element={<VehicleDetails />} />
                   {/* WORK ORDERS ROUTES */}
                   <Route path="/workorders" element={<WorkOrders />} />
+                  <Route path="/workorders/status/:status" element={<WorkOrderStatus />} />
                 </Routes>
               </div>
             </ProtectedRoute>

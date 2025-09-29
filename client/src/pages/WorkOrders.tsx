@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router";
 import { apiClient } from "../utils/api";
 import { useAuth } from "../contexts/AuthContext";
 import WorkOrdersList from "../components/workOrders/WorkOrdersList";
@@ -56,6 +57,7 @@ interface Filters {
 }
 
 const WorkOrders: React.FC = () => {
+  const navigate = useNavigate();
   const { state } = useAuth();
   const [workOrders, setWorkOrders] = useState<WorkOrder[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -193,7 +195,10 @@ const WorkOrders: React.FC = () => {
 
         {/* Status Summary Cards */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-6">
-          <div className="bg-yellow-50 hover:bg-yellow-100 p-4 rounded-lg border border-yellow-200 group hover:border-yellow-300 hover:cursor-pointer transition">
+          <div 
+            onClick={() => navigate("/workorders/status/pending")}
+            className="bg-yellow-50 hover:bg-yellow-100 p-4 rounded-lg border border-yellow-200 group hover:border-yellow-300 hover:cursor-pointer transition"
+          >
             <div className="text-2xl font-bold text-yellow-700 group-hover:text-yellow-800">
               {statusCounts.pending}
             </div>
@@ -201,7 +206,10 @@ const WorkOrders: React.FC = () => {
               Pending
             </div>
           </div>
-          <div className="bg-blue-50 hover:bg-blue-100 transition group hover:cursor-pointer p-4 rounded-lg border border-blue-200 hover:border-blue-300">
+          <div 
+            onClick={() => navigate("/workorders/status/in_progress")}
+            className="bg-blue-50 hover:bg-blue-100 transition group hover:cursor-pointer p-4 rounded-lg border border-blue-200 hover:border-blue-300"
+          >
             <div className="text-2xl font-bold text-blue-700 group-hover:text-blue-800">
               {statusCounts.in_progress}
             </div>
@@ -209,7 +217,10 @@ const WorkOrders: React.FC = () => {
               In Progress
             </div>
           </div>
-          <div className="group transition hover:cursor-pointer hover:bg-red-100 bg-red-50 p-4 rounded-lg border border-red-200 hover:border-red-300">
+          <div 
+            onClick={() => navigate("/workorders/status/down")}
+            className="group transition hover:cursor-pointer hover:bg-red-100 bg-red-50 p-4 rounded-lg border border-red-200 hover:border-red-300"
+          >
             <div className="text-2xl font-bold text-red-700 group-hover:text-red-800">
               {statusCounts.down}
             </div>
@@ -217,7 +228,10 @@ const WorkOrders: React.FC = () => {
               Vehicle Down
             </div>
           </div>
-          <div className="transition group hover:bg-purple-100 hover:cursor-pointer bg-purple-50 p-4 rounded-lg border border-purple-200 hover:border-purple-300">
+          <div 
+            onClick={() => navigate("/workorders/status/outsourced")}
+            className="transition group hover:bg-purple-100 hover:cursor-pointer bg-purple-50 p-4 rounded-lg border border-purple-200 hover:border-purple-300"
+          >
             <div className="text-2xl font-bold text-purple-700 group-hover:text-purple-800">
               {statusCounts.outsourced}
             </div>
@@ -225,7 +239,10 @@ const WorkOrders: React.FC = () => {
               Outsourced
             </div>
           </div>
-          <div className="bg-green-50 group transition p-4 hover:bg-green-100 hover:cursor-pointer rounded-lg border border-green-200 hover:border-green-300">
+          <div 
+            onClick={() => navigate("/workorders/status/completed")}
+            className="bg-green-50 group transition p-4 hover:bg-green-100 hover:cursor-pointer rounded-lg border border-green-200 hover:border-green-300"
+          >
             <div className="text-2xl font-bold text-green-700 group-hover:text-green-800">
               {statusCounts.completed}
             </div>
@@ -233,7 +250,10 @@ const WorkOrders: React.FC = () => {
               Completed
             </div>
           </div>
-          <div className="bg-emerald-50 hover:bg-emerald-100 p-4 rounded-lg border border-emerald-200 hover:border-emerald-300 hover:cursor-pointer transition group">
+          <div 
+            onClick={() => navigate("/workorders/status/in_service")}
+            className="bg-emerald-50 hover:bg-emerald-100 p-4 rounded-lg border border-emerald-200 hover:border-emerald-300 hover:cursor-pointer transition group"
+          >
             <div className="text-2xl font-bold text-emerald-700 group-hover:text-emerald-800">
               {statusCounts.in_service}
             </div>

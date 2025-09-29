@@ -1,10 +1,16 @@
 import { FaBus } from "react-icons/fa";
+import { useNavigate } from "react-router";
 
 export default function TotalFleet({ stats }) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/vehicles");
+  };
+
   return (
-    <a
-      href="/vehicles"
-      target="blank"
+    <div
+      onClick={handleClick}
       className="group hover:cursor-pointer bg-white rounded-lg shadow-sm hover:shadow-md p-6 border-l-4 border-blue-500 hover:bg-blue-50 transition hover:border-blue-600"
     >
       <div className="flex items-center justify-between">
@@ -23,6 +29,6 @@ export default function TotalFleet({ stats }) {
           />
         </div>
       </div>
-    </a>
+    </div>
   );
 }
